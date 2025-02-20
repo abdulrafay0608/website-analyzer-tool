@@ -10,6 +10,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.get("/", (_, res) => {
+  res.send("Welcome to the website analyzer tool!");
+});
+
 app.use("/api/analyze", analyzeRouter);
 
 app.listen(port, () => {
