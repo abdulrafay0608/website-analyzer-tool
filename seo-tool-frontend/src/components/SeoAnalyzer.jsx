@@ -9,7 +9,7 @@ const SeoAnalyzer = () => {
   const [error, setError] = useState("");
 
   const analyzeWebsite = async () => {
-    setReport(null)
+    setReport(null);
     if (!url) {
       setError("Please enter a valid URL");
       return;
@@ -19,7 +19,10 @@ const SeoAnalyzer = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/analyze", { url });
+      const response = await axios.post(
+        "https://website-analyzer-tool-backend.vercel.app/api/analyze",
+        { url }
+      );
       setReport(response.data);
     } catch (err) {
       setError("Failed to analyze the website. Please try again.");
