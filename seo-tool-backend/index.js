@@ -5,7 +5,13 @@ import analyzeRouter from "./routes/routes.analyze.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://website-analyzer-tool.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
