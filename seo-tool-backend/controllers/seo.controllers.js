@@ -193,7 +193,10 @@ export async function analyzeWebsite(req, res) {
 
     // --- 7. JavaScript Rendering, Mobile View, & Clickable Elements ---
     // { headless: false }
-    const browser = await chromium.launch();
+    const browser = await chromium.launch({
+      headless: true,
+      executablePath: "/usr/bin/chromium", // System-installed Chromium path
+    });
     const context = await browser.newContext({
       viewport: { width: 375, height: 667 },
       isMobile: true,
