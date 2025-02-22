@@ -19,10 +19,9 @@ const SeoAnalyzer = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        "https://website-analyzer-tool-backend.vercel.app/api/analyze",
-        { url }
-      );
+      const response = await axios.post("http://localhost:5000/api/analyze", {
+        url,
+      });
       setReport(response.data);
     } catch (err) {
       setError("Failed to analyze the website. Please try again.");

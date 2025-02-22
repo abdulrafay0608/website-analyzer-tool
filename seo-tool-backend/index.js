@@ -7,7 +7,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 app.use(
   cors({
-    origin: "https://website-analyzer-tool.vercel.app",
+    origin: [
+      "http://localhost:5173",
+      "https://website-analyzer-tool.vercel.app",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

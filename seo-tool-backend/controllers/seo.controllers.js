@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import puppeteer from "puppeteer";
+import { chromium } from "playwright";
 
 // export async function analyzeWebsite(req, res) {
 //   const { url } = req.body;
@@ -122,7 +122,6 @@ export async function analyzeWebsite(req, res) {
     // --- 1. Fetch HTML Content ---
     const { data: html } = await axios.get(url);
     const $ = cheerio.load(html);
-
     // --- 2. Basic SEO Elements ---
     const title = $("title").text() || "Not Found";
     const metaDescription =
@@ -193,23 +192,25 @@ export async function analyzeWebsite(req, res) {
     const responseTime = Date.now() - startTime;
 
     // --- 7. JavaScript Rendering, Mobile View, & Clickable Elements ---
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
+    // { headless: false }
+    const browser = await chromium.launch();
+    const context = await browser.newContext({
+      viewport: { width: 375, height: 667 },
+      isMobile: true,
+    });
+    const page = await context.newPage();
 
-    // Navigate to page with JS rendering
     await page.goto(url, {
       timeout: 60000,
-    //   waitUntil: "domcontentloaded",
-      waitUntil: "networkidle2",
+      waitUntil: "networkidle",
     });
 
-    // Mobile view check: set viewport to typical mobile dimensions
-    await page.setViewport({ width: 375, height: 667, isMobile: true });
+    // Screenshot for mobile view
+    const mobileViewScreenshot = (
+      await page.screenshot({ encoding: "base64" })
+    ).toString("base64");
 
-    // Screenshot for mobile view (encoded in base64)
-    const mobileViewScreenshot = await page.screenshot({ encoding: "base64" });
-
-    // Count clickable elements (e.g., links, buttons)
+    // Count clickable elements
     const clickableElementsCount = await page.$$eval(
       "a, button",
       (elements) => elements.length
@@ -239,7 +240,6 @@ export async function analyzeWebsite(req, res) {
       $("meta[charset]").attr("charset") ||
       $('meta[http-equiv="Content-Type"]').attr("content") ||
       "Not specified";
-
     // --- Build Final Detailed Report ---
     const report = {
       url,
@@ -266,7 +266,7 @@ export async function analyzeWebsite(req, res) {
         h3Tags,
       },
       links: {
-        totalLinksFound: links.length,
+        totalLinks: links,
         brokenLinks,
       },
       performance: {
