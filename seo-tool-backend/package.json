@@ -18,9 +18,7 @@
     "express": "^4.21.2",
     "is-minified": "^0.0.1",
     "lighthouse": "^12.3.0",
-    "nodemon": "^3.1.9"
-  },
-  "devDependencies": {
-    "puppeteer": "^24.2.1"
+    "nodemon": "^3.1.9",
+    "playwright": "^1.50.1"
   }
 }
