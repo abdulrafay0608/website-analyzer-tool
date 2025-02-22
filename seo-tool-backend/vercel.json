@@ -3,28 +3,13 @@
   "builds": [
     {
       "src": "index.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [".playwright/**"]
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "index.js",
-      "methods": ["GET", "POST"]
+      "src": "/(.*)",
+      "dest": "index.js"
     }
-  ],
-  "build": {
-    "env": {
-      "PLAYWRIGHT_BROWSERS_PATH": "0"
-    }
-  },
-  "functions": {
-    "api/*.js": {
-      "memory": 3008,
-      "maxDuration": 30
-    }
-  }
+  ]
 }
