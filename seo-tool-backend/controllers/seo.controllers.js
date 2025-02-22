@@ -82,35 +82,36 @@ export async function analyzeWebsite(req, res) {
     const responseTime = Date.now() - startTime;
     console.log("responseTime", responseTime);
 
-    // --- 7. JavaScript Rendering, Mobile View, & Clickable Elements ---
-    const browser = await chromium.launch({
-      headless: true, // Headless mode is required on Vercel.
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    // // --- 7. JavaScript Rendering, Mobile View, & Clickable Elements ---
+    // const browser = await chromium.launch({
+    //   headless: true, // Headless mode is required on Vercel.
+    //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    // });
 
-    // Create a new browser context with mobile emulation.
-    const context = await browser.newContext({
-      viewport: { width: 375, height: 667 },
-      userAgent:
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
-    });
+    // // Create a new browser context with mobile emulation.
+    // const context = await browser.newContext({
+    //   viewport: { width: 375, height: 667 },
+    //   userAgent:
+    //     "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
+    // });
 
-    const page = await context.newPage();
+    // const page = await context.newPage();
 
-    await page.goto(url, {
-      timeout: 60000,
-      waitUntil: "networkidle",
-    });
+    // await page.goto(url, {
+    //   timeout: 60000,
+    //   waitUntil: "networkidle",
+    // });
 
-    // Take a mobile screenshot in base64 encoding.
-    const mobileViewScreenshot = await page.screenshot({ encoding: "base64" });
-    // Count clickable elements (links and buttons)
-    const clickableElementsCount = await page.$$eval(
-      "a, button",
-      (elements) => elements.length
-    );
+    // // Take a mobile screenshot in base64 encoding.
+    // const mobileViewScreenshot = await page.screenshot({ encoding: "base64" });
+    // // Count clickable elements (links and buttons)
+    // const clickableElementsCount = await page.$$eval(
+    //   "a, button",
+    //   (elements) => elements.length
+    // );
 
-    await browser.close();
+    // await browser.close();
+
     // --- 8. JS & CSS Minification Check ---
     const jsMinified = [];
     const cssMinified = [];
@@ -166,8 +167,8 @@ export async function analyzeWebsite(req, res) {
         serverResponseTime: responseTime, // in milliseconds
       },
       rendering: {
-        mobileViewScreenshot, // base64 encoded image
-        clickableElementsCount,
+        // mobileViewScreenshot, // base64 encoded image
+        // clickableElementsCount,
       },
       assets: {
         jsMinified,
