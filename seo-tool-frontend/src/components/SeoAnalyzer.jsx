@@ -19,9 +19,12 @@ const SeoAnalyzer = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/analyze", {
-        url,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/analyze`,
+        {
+          url,
+        }
+      );
       setReport(response.data);
     } catch (err) {
       setError("Failed to analyze the website. Please try again.");
@@ -37,7 +40,7 @@ const SeoAnalyzer = () => {
       {/* Input Form */}
       <div className="flex space-x-2">
         <input
-          type="text"
+          type="url"
           placeholder="Enter website URL"
           className="w-full p-2 border rounded"
           value={url}

@@ -83,34 +83,16 @@ export async function analyzeWebsite(req, res) {
     console.log("responseTime", responseTime);
 
     // --- 7. JavaScript Rendering, Mobile View, & Clickable Elements ---
-    // { headless: false }
-    // const browser = await puppeteer.launch();
-    // const page = await browser.newPage();
-    // await page.goto(url, {
-    //   timeout: 60000,
-    //   waitUntil: "networkidle2",
-    // });
-    // await page.setViewport({ width: 375, height: 667 });
-
-    // // Screenshot for mobile view (base64 encoded)
-    // const mobileViewScreenshot = await page.screenshot({ encoding: "base64" });
-
-    // // Count clickable elements (links and buttons)
-    // const clickableElementsCount = await page.evaluate(() => {
-    //   return document.querySelectorAll("a, button").length;
-    // });
-
-    // await browser.close();
-
     const browser = await chromium.launch({
-      headless: true, // Vercel par headless chalana zaroori hai
-      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Security flags
+      headless: true, // Headless mode is required on Vercel.
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
+    // Create a new browser context with mobile emulation.
     const context = await browser.newContext({
-      viewport: { width: 375, height: 667 }, // Mobile view
+      viewport: { width: 375, height: 667 },
       userAgent:
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1", // Mobile user agent
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
     });
 
     const page = await context.newPage();
@@ -120,12 +102,9 @@ export async function analyzeWebsite(req, res) {
       waitUntil: "networkidle",
     });
 
-    // Mobile screenshot (base64)
-    const mobileViewScreenshot = (
-      await page.screenshot({ encoding: "base64" })
-    ).toString("base64");
-
-    // Clickable elements count
+    // Take a mobile screenshot in base64 encoding.
+    const mobileViewScreenshot = await page.screenshot({ encoding: "base64" });
+    // Count clickable elements (links and buttons)
     const clickableElementsCount = await page.$$eval(
       "a, button",
       (elements) => elements.length
